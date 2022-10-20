@@ -11,7 +11,7 @@ class CI_Controller {
 
 /**
  * @property LoginModel                       $LoginModel                  		LoginModel
- * @property TarefasModel               	  $TarefasModel              	    TarefasModel
+ * @property TarefasModel               	  $TarefasModel             	    TarefasModel
  */
 class CI_Model {
     public function __construct () { }

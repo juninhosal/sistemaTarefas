@@ -8,19 +8,21 @@ class TarefasModel extends MY_Model {
 	}
 
 	/**
-	 * @param $dadosNoticia
+	 * @param $dadosTarefa
+	 * @param $idTarefa
 	 * @return bool
+	 * Função para salvar o cadastro da tarefa
 	 */
-	public function salvarNoticia($dadosNoticia, $idNoticia) {
+	public function salvarTarefa($dadosTarefa, $idTarefa) {
 		$this->db->trans_begin();
-		if(!empty($idNoticia)){
-			$this->db->set("nome", $dadosNoticia['nome']);
-			$this->db->set("descricao", $dadosNoticia['descricao']);
-			$this->db->set("idCategoria", $dadosNoticia['idCategoria']);
-			$this->db->where("idNoticia", $idNoticia);
-			$this->db->update("noticia");
+		if(!empty($idTarefa)){
+			$this->db->set("nome", $dadosTarefa['nome']);
+			$this->db->set("dataTarefa", $dadosTarefa['dataTarefa']);
+			$this->db->set("descricao", $dadosTarefa['descricao']);
+			$this->db->where("idTarefa", $idTarefa);
+			$this->db->update("tarefas");
 		}else {
-			$this->db->insert("noticia", $dadosNoticia);
+			$this->db->insert("tarefas", $dadosTarefa);
 		}
 		if($this->db->trans_status() === false) {
 			$this->db->trans_rollback();
@@ -34,49 +36,51 @@ class TarefasModel extends MY_Model {
 
 	/**
 	 * @return mixed
-	 * Função para pegar todas as categorias cadastradas
+	 * Função para pegar todas as tarefas cadastradas
 	 */
-	public function getNoticias(){
+	public function getTarefas(){
 		$ret = $this->db->query("
 		 SELECT 
-		 	 idNoticia
-		 	,idCategoria
+		 	 idTarefa
 		 	,nome
+		 	,dataTarefa
 		 	,descricao
 		 FROM
-			noticia
+			tarefas
 		")->result_array();
 
 		return ($ret);
 	}
 
 	/**
+	 * @param $idTarefa
 	 * @return mixed
-	 * Função para pegar todas as categorias cadastradas
+	 * pegar as informações das tarefas selecionadas
 	 */
-	public function getNoticia($idNoticia){
+	public function getTarefa($idTarefa){
 		$ret = $this->db->query("
 		 SELECT 
-		 	 idNoticia
-		 	,idCategoria
+		 	 idTarefa
 		 	,nome
+		 	,dataTarefa
 		 	,descricao
 		 FROM
-			noticia
+			tarefas
 		WHERE 
-		 idNoticia = '$idNoticia'
+		 idTarefa = '$idTarefa'
 		")->result_array();
 		return ($ret);
 	}
 
 	/**
-	 * @param $idNoticia
+	 * @param $idTarefa
 	 * @return bool
+	 * Deletar as tarefas
 	 */
-	public function deletarNoticia($idNoticia){
+	public function deletarTarefa($idTarefa){
 		$this->db->trans_begin();
-		$this->db->where('idNoticia', $idNoticia);
-		$this->db->delete('noticia');
+		$this->db->where('idTarefa', $idTarefa);
+		$this->db->delete('tarefas');
 		if($this->db->trans_status() === false) {
 			$this->db->trans_rollback();
 			$ret = FALSE;

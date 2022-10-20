@@ -19,3 +19,7 @@ function dataAgoraFormatada (string $formatoData = "Y-m-d", string $timeZone = "
 	}
 	return !empty($dt) ? $dt->format($formatoData) : "";
 }
+
+function formatarDataBr ($date, $format = 'd/m/Y') {
+	return !empty($date) ? DateTime::createFromFormat('Y-m-d', $date)->format($format) : NULL;
+}

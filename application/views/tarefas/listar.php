@@ -1,7 +1,7 @@
 <div class="row">
 	<div class="col-lg-12 col-sm-12 col-md-12">
 		<button type="button" class="btn btn-success btn-sm" style="float: right;margin-right: 1.5%"
-				onclick="location.href='<?= site_url('Noticia/cadastrarNoticia'); ?>'">
+				onclick="location.href='<?= site_url('Tarefas/cadastrarTarefa'); ?>'">
 			Novo
 		</button>
 	</div>
@@ -12,8 +12,9 @@
 		<thead>
 			<tr>
 				<th>Código</th>
-				<th>Nome</th>
-				<th>Descrição</th>
+				<th>Nome da tarefa</th>
+				<th>Data da tarefa</th>
+				<th>Descrição da tarefa</th>
 				<th>Ações</th>
 			</tr>
 		</thead>
@@ -21,21 +22,24 @@
 			<?php foreach ($dadosTabela AS $dados){ ?>
 				<tr>
 					<td style="width: 50px">
-						<?= $dados['idNoticia'] ?>
+						<?= $dados['idTarefa'] ?>
 					</td>
 					<td>
 						<?= $dados['nome'] ?>
+					</td>
+					<td style="width: 100px">
+						<?=  formatarDataBr($dados['dataTarefa'])?>
 					</td>
 					<td style="width: 450px">
 						<?= $dados['descricao']?>
 					</td>
 					<td>
 						<div style="display: inline-block">
-							<a href="<?= site_url('Noticia/cadastrarNoticia/'.$dados['idNoticia']) ?>" type="button" class="btn btn-warning btn-sm editar" >
+							<a href="<?= site_url('Tarefas/cadastrarTarefa/'.$dados['idTarefa']) ?>" type="button" class="btn btn-warning btn-sm editar" >
 								<i class="fa fa-paint-brush" aria-hidden="true"></i></a>
 						</div>
 						<div style="display: inline-block">
-							<a href="<?= site_url('Noticia/deletarNoticia/'.$dados['idNoticia']) ?>" type="button" class="btn btn-danger btn-sm excluir" >
+							<a href="<?= site_url('Tarefas/deletarTarefa/'.$dados['idTarefa']) ?>" type="button" class="btn btn-danger btn-sm excluir" >
 								<i class="fa fa-trash" aria-hidden="true"></i></a>
 						</div>
 					</td>
@@ -92,7 +96,7 @@
 					"colvis": "Ocultar coluna"
 				}
 			},
-			"buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
+			"buttons": ["copy", "excel", "pdf", "print", "colvis"]
 		}).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
 		$('#example2').DataTable({
 			"paging": true,

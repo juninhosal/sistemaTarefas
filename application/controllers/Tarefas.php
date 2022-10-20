@@ -7,15 +7,18 @@ class Tarefas extends MY_Controller{
 		$this->load->model("TarefasModel");
 	}
 
-
+	/**
+	 * @return void
+	 * Tela iniciar onde é listado todas as Tarefas Cadastradas
+	 */
 	public function index() {
 		if (empty($_SESSION['id'])) {
 			redirect('Login');
 			exit(0);
 		}else{
 			$retorno = $this->getErro();
-			$dadosTabela = $this->TarefasModel->getNoticias();
-			$this->template->set('title', 'Tarefas');
+			$dadosTabela = $this->TarefasModel->getTarefas();
+			$this->template->set('title', 'Listagem de Tarefas');
 			$this->template->load('default', 'tarefas/listar', array(
 				'dadosTabela' => $dadosTabela,
 				'retorno' => $retorno
@@ -24,14 +27,19 @@ class Tarefas extends MY_Controller{
 	}
 
 
-	public function cadastrarNoticia($idNoticia = null){
+	/**
+	 * @param $idTarefa
+	 * @return void
+	 * Tela de cadastro de tarefa
+	 */
+	public function cadastrarTarefa($idTarefa = null){
 		if (empty($_SESSION['id'])) {
 			redirect('Login');
 			exit(0);
 
 		}else{
-			if(!empty($idNoticia)){
-				$dadosNoticia = $this->TarefasModel->getNoticia($idNoticia);
+			if(!empty($idTarefa)){
+				$dadosTarefa = $this->TarefasModel->getTarefa($idTarefa);
 			}
 			$retorno = $this->getErro();
 			$dadosSelect= NULL;
@@ -39,27 +47,31 @@ class Tarefas extends MY_Controller{
 			$this->template->load('default', 'tarefas/cadastrar', array(
 				'retorno' => $retorno,
 				'dadosSelect' => $dadosSelect,
-				"dadosNoticia" => !empty($dadosNoticia) ? $dadosNoticia : null
+				"dadosTarefa" => !empty($dadosTarefa) ? $dadosTarefa : null
 			) );
 		}
 	}
 
-
-	public function cadastrar($idNoticia = null) {
+	/**
+	 * @param $idTarefa
+	 * @return void
+	 * Requisição para cadastrar a tarefa
+	 */
+	public function cadastrar($idTarefa = null) {
 		if (empty($_SESSION['id'])) {
 
 			redirect('Login');
 			exit(0);
 
 		}else{
-			$dadosNoticia = array();
-				$this->form_validation->set_rules("nome","Nome", "required|min_length[2]|max_length[250]");
-				$this->form_validation->set_rules("categoria","Categoria", "required");
-				$this->form_validation->set_rules("descricao","Descrição", "required|min_length[2]|max_length[250]");
+			$dadosTarefa = array();
+				$this->form_validation->set_rules("nome","Nome da tarefa", "required|min_length[2]|max_length[250]");
+				$this->form_validation->set_rules("data","Data da tarefa", "required");
+				$this->form_validation->set_rules("descricao","Descrição da Tarefa", "required|min_length[2]|max_length[250]");
 
-			$dadosNoticia = array(
+			$dadosTarefa = array(
 					'nome' 			=> addslashes( $this->input->post("nome")),
-					'idCategoria' 	=> addslashes( $this->input->post("categoria")),
+					'dataTarefa' 	=> addslashes( $this->input->post("data")),
 					'descricao'	 	=> addslashes( $this->input->post("descricao")),
 				);
 			}
@@ -70,13 +82,13 @@ class Tarefas extends MY_Controller{
 				);
 				$mensagem = array(
 					'msg' => $msg,
-					'retorno'=> $dadosNoticia
+					'retorno'=> $dadosTarefa
 				);
 
 				$this->setErro($mensagem);
 
 			} else {
-				if($this->TarefasModel->salvarNoticia($dadosNoticia, $idNoticia)) {
+				if($this->TarefasModel->salvarTarefa($dadosTarefa, $idTarefa)) {
 					$msg = array(
 						"class"     => "success",
 						"msg"  => "Cadastro feito com sucesso!"
@@ -93,22 +105,26 @@ class Tarefas extends MY_Controller{
 					);
 					$mensagem = array(
 						'msg' => $msg,
-						'retorno'=> $dadosNoticia
+						'retorno'=> $dadosTarefa
 					);
 
 					$this->setErro($mensagem);
 				}
 			}
-			redirect('TarefasModel/cadastrarNoticia');
+			redirect('Tarefas/cadastrarTarefa');
 		}
 
-
-	public function deletarNoticia($idNoticia){
-		$deletar = $this->TarefasModel->deletarNoticia($idNoticia);
+	/**
+	 * @param $idTarefa
+	 * @return void
+	 * Requisição para deletar a tarefa selecionada
+	 */
+	public function deletarTarefa($idTarefa){
+		$deletar = $this->TarefasModel->deletarTarefa($idTarefa);
 		if($deletar == TRUE){
 			$msg = array(
 				"class"     => "success",
-				"msg"  => "<strong> TarefasModel excluida com sucesso! </strong>"
+				"msg"  => "<strong> Tarefa excluida com sucesso! </strong>"
 			);
 			$mensagem = array(
 				'msg' => $msg,
